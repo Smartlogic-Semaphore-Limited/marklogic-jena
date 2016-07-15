@@ -29,6 +29,20 @@ dependencies {
 	testCompile 'junit:junit:4.12'
 }
 
+task setVersion << {
+  Properties props = new Properties() {
+    @Override
+    public synchronized Enumeration<Object> keys() {
+        return Collections.enumeration(new TreeSet<Object>(super.keySet()));
+    }
+  };
+  File propsFile = new File('marklogic-jena/gradle.properties')
+  props.load(propsFile.newDataInputStream())
+  props.setProperty('theVersion', "${newVersion}")
+  props.store(propsFile.newWriter(), null)
+  props.load(propsFile.newDataInputStream())
+}
+
 sourceSets {
 	test {
 		java {
@@ -110,6 +124,16 @@ publishing {
   repositories {
     maven {
       url publishUrl
+    }
+  }
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      repository(url: "http://cart/archiva/repository/external_non_free") {
+        authentication(userName: mavenUser, password: mavenPass)
+      }
     }
   }
 }
