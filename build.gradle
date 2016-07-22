@@ -20,6 +20,7 @@ subprojects {
     repositories {
         mavenCentral()
         mavenLocal()
+        maven {url "http://cart/archiva/repository/external_non_free"}
     }
 
     jacocoTestReport {
